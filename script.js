@@ -6,6 +6,9 @@ canvasContext.fillStyle = '#fff';
 
 let arrayOfCells = [];
 
+let count = 0;
+let timer;
+
 const cellSize = 30;
 const canvasSize = 300;
 const rectSize = 10;
@@ -55,3 +58,51 @@ function drawCell() {
         }
     }
 }
+
+function startLife() {
+    let arr2 = [];
+
+    for (let i = 0; i < cellSize; i++) {
+        arr2[i] = [];
+        for (let j = 0; j < cellSize; j++) {
+            // считаем количество соседей
+            let neighbors = 0;
+            // верхний сосед
+            if (arrayOfCells[checkTop(i)-1][j]==1) neighbors++;
+            // справа
+            if (arrayOfCells[i][checkRight(j)+1]==1) neighbors++;
+            // снизу
+            if (arrayOfCells[checkRight(i)+1][j]==1) neighbors++;
+            // слева
+            if (arrayOfCells[i][checkTop(j)-1]==1) neighbors++;
+            // диагональ
+            if (arrayOfCells[checkTop(i)-1][checkRight(j)+1]==1) neighbors++;
+            if (arrayOfCells[checkRight(i)+1][checkRight(j)+1]==1) neighbors++;
+            if (arrayOfCells[checkRight(i)+1][checkTop(j)-1]==1) neighbors++;
+            if (arrayOfCells[checkTop(i)-1][checkRight(j)-1]==1) neighbors++;
+
+            (neighbors == 2 || neighbors == 3) ?
+            arr2[i][j] = 1 : arr2[i][j] == 0;
+        }
+    }
+
+    arrayOfCells = arr2;
+    drawCell();
+    count ++;
+
+    timer = setTimeout(startLife, 300);
+
+}
+
+// при выходе за пределы поля
+function checkTop(i) {
+    if (i == 0) return cellSize;
+    else return i;
+}
+
+function checkRight(i) {
+    if (i == (cellSize - 1)) return -1;
+    else return i;
+}
+
+document.getElementById('start').onclick = startLife;
